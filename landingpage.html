@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Learning Assistant</title>
+    <link rel="stylesheet" href="landingpage.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">AI Kaksha</div>
+            <div class="nav-links">
+                <button>Login</button>
+                <button>Signup</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>AI for Smarter Learning</h1>
+        <p>Revolutionize your educational experience with cutting-edge AI-powered solutions.</p>
+        <div class="cta-buttons">
+            <button>Get Started</button>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>The Power of AI in Education</h2>
+        <p>Experience the future of learning with personalized AI-driven insights.</p>
+        <button>Discover Benefits</button>
+    </section>
+
+    <section class="testimonials">
+        <h2>What our users say</h2>
+        <div class="testimonial-cards">
+            <div class="card">
+                <p>"This AI assistant has transformed my learning experience! The interactive features make it so much easier to understand complex topics."</p>
+            </div>
+            <div class="card">
+                <p>"Incredibly intuitive and helpful for understanding complex topics. The automated note-taking feature is a game-changer."</p>
+            </div>
+            <div class="card">
+                <p>"The AI-driven insights have made my study sessions more productive. I love how it connects different educational topics seamlessly."</p>
+            </div>
+            <div class="card">
+                <p>"A must-have tool for any student. The ability to ask questions and get precise answers with timestamps is invaluable."</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="try-ai-kaksha">
+        <div class="try-content">
+            <h2>Try AI Kaksha now</h2>
+        </div>
+        <div>
+            <button>Start Free Trial</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 AIKaksha. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const elements = document.querySelectorAll('header, .hero, .features, .testimonials, .try-ai-kaksha, footer');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    } else {
+                        entry.target.style.opacity = 0;
+                        entry.target.style.transform = 'translateY(20px)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

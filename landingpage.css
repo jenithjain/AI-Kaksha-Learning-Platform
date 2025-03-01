@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, rgba(68, 104, 242, 0.8), rgba(185, 217, 255, 0.8)), url('path/to/3d-background.jpg') no-repeat center center;
+    background-size: cover;
+    color: #C5C8E0;
+    line-height: 1.6;
+    font-size: 18px;
+    animation: scrollBackground 20s linear infinite;
+}
+
+@keyframes scrollBackground {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+header, .hero, .features, .testimonials, .try-ai-kaksha, footer {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+header {
+    background-color: rgba(14, 14, 15, 0.8); /* Semi-transparent to show background */
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.logo {
+    font-size: 28px; /* Increased logo font size */
+    color: #C5C8E0;
+}
+
+.nav-links {
+    position: absolute;
+    right: 40px; /* Adjusted for more space */
+    top: 20px;
+}
+
+.nav-links a {
+    color: #C5C8E0;
+    text-decoration: none;
+    margin-left: 20px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #B9D9FF; /* Baby Purple */
+}
+
+.nav-links button, .cta-buttons button {
+    background-color: #4468F2; /* Ultramarine Blue */
+    color: #C5C8E0; /* Lavender Gray */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-links button:hover, .cta-buttons button:hover {
+    background-color: #B9D9FF; /* Baby Purple */
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+button {
+    background-color: #4468F2; /* Ultramarine Blue */
+    color: #C5C8E0; /* Lavender Gray */
+    border: none;
+    padding: 15px 30px; /* Increased button size */
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 15px; /* Increased margin between buttons */
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 18px; /* Increased button font size */
+}
+
+button:hover {
+    background-color: #B9D9FF; /* Baby Purple */
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.cta-buttons button, .features button, .try-ai-kaksha button {
+    padding: 20px 40px; /* Further increased button size for specific buttons */
+    font-size: 20px; /* Further increased font size for specific buttons */
+}
+.hero {
+    text-align: center;
+    padding: 120px 20px;
+    background: linear-gradient(135deg, rgba(68, 104, 242, 0.8), rgba(185, 217, 255, 0.8)), url('path/to/3d-background.jpg') no-repeat center center;
+    background-size: cover;
+    color: #C5C8E0;
+    position: relative;
+    overflow: hidden;
+    perspective: 1000px;
+    /* Add parallax effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg) translateZ(-1px);
+    z-index: 0;
+    /* Add parallax effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.hero h1 {
+    font-size: 56px; /* Increased hero heading size */
+    margin-bottom: 30px; /* Increased margin below heading */
+    position: relative;
+    z-index: 1;
+    transform: translateZ(20px); /* Bring text forward */
+}
+
+.hero p {
+    font-size: 20px; /* Increased hero paragraph size */
+    margin-bottom: 40px; /* Increased margin below paragraph */
+    position: relative;
+    z-index: 1;
+    transform: translateZ(20px); /* Bring text forward */
+}
+
+.features, .testimonials {
+    background-color: #0E0E0F;
+    padding: 60px 20px; /* Increased vertical padding */
+    text-align: center;
+}
+
+.features h2, .testimonials h2 {
+    color: #C5C8E0;
+    margin-bottom: 30px; /* Increased margin below section headings */
+    font-size: 32px; /* Increased section heading size */
+}
+
+.testimonial-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* Increased gap between cards */
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: #1E293B;
+    padding: 30px; /* Increased padding inside cards */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    width: 250px;
+    color: #C5C8E0;
+    transition: transform 0.3s ease;
+    font-size: 18px; /* Increased card font size */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.try-ai-kaksha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px;
+    background-color: #0E0E0F; /* Keep the background dark */
+    color: #C5C8E0;
+    text-align: center;
+}
+
+.try-ai-kaksha .try-content h2 {
+    font-size: 100px; /* Large font size for emphasis */
+    margin: 0 0 20px 0;
+}
+
+.try-ai-kaksha button {
+    font-size: 20px; /* Increase button font size */
+    padding: 20px 50px; /* Increase button padding */
+}
+
+footer {
+    background-color: #0E0E0F;
+    padding: 30px 20px; /* Increased vertical padding */
+    text-align: center;
+    color: #C5C8E0;
+    font-size: 18px; /* Increased footer font size */
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 40px; /* Adjusted for smaller screens */
+    }
+
+    .hero p {
+        font-size: 18px; /* Adjusted for smaller screens */
+    }
+
+    .feature-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 90%;
+    }
+
+    .try-ai-kaksha {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .try-ai-kaksha .try-content h2 {
+        font-size: 36px; /* Adjusted for smaller screens */
+    }
+
+    .try-ai-kaksha button {
+        margin-top: 20px;
+    }
+}
