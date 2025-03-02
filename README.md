@@ -1,4 +1,3 @@
-# pyTeam_Jenith-Ambavat
 
 # AI Kaksha Learning Platform
 
@@ -29,7 +28,11 @@ AI Kaksha is a modern e-learning platform that combines artificial intelligence 
 - Course completion statistics
 - Performance analytics
 - Learning path recommendations
-
+### 5. Interactive Video Navigation & Q&A
+-Upload videos or input URLs for AI-driven analysis
+-Natural language queries to find specific video segments
+-Answers with precise timestamps for quick navigation
+-Semantic search across indexed video content
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -114,7 +117,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👥 Authors
 
 - **Ebrahim Gamdiwala** - *Initial work* - [ebrahimgamdiwala](https://github.com/ebrahimgamdiwala)
-
+- - **Jenith jain** - *Model* - [jenithjain](https://github.com/jenithjain)
 ## 🙏 Acknowledgments
 
 - Thanks to all contributors
@@ -123,7 +126,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-For support, email ebrahimgamdiwala@gmail.com or create an issue in the repository.
+For support, email ebrahimgamdiwala@gmail.com or jenithjain09@gmail.com create an issue in the repository.
 
 ---
 Made with ❤️ by AI Kaksha Team  
