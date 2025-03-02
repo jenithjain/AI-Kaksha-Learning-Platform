@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0E0E0F;
+    color: #C5C8E0;
+    line-height: 1.6;
+    font-size: 18px;
+    transition: background-color 0.6s ease-out, color 0.6s ease-out; /* Add transition */
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    margin-left: 250px; /* Adjust for the fixed sidebar width */
+    padding: 20px;
+    transition: margin-left 0.6s ease-out, padding 0.6s ease-out; /* Add transition */
+}
+
+.hero {
+    text-align: center;
+    padding: 120px 20px;
+    background: linear-gradient(135deg, rgba(68, 104, 242, 0.8), rgba(185, 217, 255, 0.8));
+    color: #C5C8E0;
+    transition: background 0.6s ease-out, color 0.6s ease-out; /* Add transition */
+    margin: -20px;
+    margin-left: -30px;
+}
+
+.content {
+    padding: 60px 20px;
+    text-align: center;
+    transition: padding 0.6s ease-out; /* Add transition */
+}
+
+.course-list {
+    list-style: none;
+    padding: 0;
+}
+
+.course-list li {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #1E293B;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.6s ease-out, box-shadow 0.6s ease-out; /* Add transition */
+}
+
+.course-list li:hover {
+    background-color: #2E3A4B;
+}
+
+footer {
+    background-color: #0E0E0F;
+    padding: 30px 20px;
+    text-align: center;
+    color: #C5C8E0;
+    font-size: 18px;
+    transition: background-color 0.6s ease-out, padding 0.6s ease-out; /* Add transition */
+}
+
+@media (max-width: 768px) {
+    main {
+        margin-left: 0; /* Full width when sidebar is hidden */
+    }
+}

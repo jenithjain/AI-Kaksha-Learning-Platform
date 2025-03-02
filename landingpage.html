@@ -3,85 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered Learning Assistant</title>
-    <link rel="stylesheet" href="landingpage.css">
+    <title>AI Kaksha - AI-Powered Learning Assistant</title>
+    <link rel="stylesheet" href="landingpage.css    ">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "gsap": "https://unpkg.com/gsap@3.12.4/index.js"
+        }
+    }
+    </script>
 </head>
 <body>
+    <div class="noise-overlay"></div>
+    
     <header>
         <nav>
             <div class="logo">AI Kaksha</div>
             <div class="nav-links">
-                <button>Login</button>
-                <button>Signup</button>
+                <a href="#features">Features</a>
+                <a href="#testimonials">Testimonials</a>
+                <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+                <button class="signup-btn" onclick="window.location.href='signup.html'">Signup</button>
+            </div>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </nav>
     </header>
 
     <section class="hero">
-        <h1>AI for Smarter Learning</h1>
-        <p>Revolutionize your educational experience with cutting-edge AI-powered solutions.</p>
-        <div class="cta-buttons">
-            <button>Get Started</button>
+        <div class="hero-content">
+            <h1>AI for Smarter Learning</h1>
+            <p>Revolutionize your educational experience with cutting-edge AI-powered solutions that adapt to your learning style.</p>
+            <div class="cta-buttons">
+                <button class="primary-btn" onclick="window.location.href='signup.html'">Get Started</button>
+            </div>
+        </div>
+        <div class="hero-3d-container" id="hero-3d"></div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <div class="arrow">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </section>
 
-    <section class="features">
-        <h2>The Power of AI in Education</h2>
-        <p>Experience the future of learning with personalized AI-driven insights.</p>
-        <button>Discover Benefits</button>
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>The Power of AI in Education</h2>
+            <p>Experience the future of learning with personalized AI-driven insights tailored to your educational journey.</p>
+        </div>
+        
+        <div class="feature-cards">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <h3>Personalized Learning</h3>
+                <p>AI algorithms adapt to your learning style and pace, creating a customized educational experience.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                </div>
+                <h3>Instant Feedback</h3>
+                <p>Receive immediate insights on your progress and areas for improvement in real-time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"></path>
+                        <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                    </svg>
+                </div>
+                <h3>Smart Recommendations</h3>
+                <p>Get intelligent suggestions for learning resources based on your goals and performance.</p>
+            </div>
+        </div>
+        
+        <div class="features-3d-container" id="features-3d"></div>
+        
+        <div class="features-cta">
+            <button class="primary-btn">Discover Benefits</button>
+        </div>
     </section>
 
-    <section class="testimonials">
-        <h2>What our users say</h2>
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>What Our Users Say</h2>
+            <p>Join thousands of students and educators who have transformed their learning experience</p>
+        </div>
+        
         <div class="testimonial-cards">
             <div class="card">
+                <div class="quote-icon">❝</div>
                 <p>"This AI assistant has transformed my learning experience! The interactive features make it so much easier to understand complex topics."</p>
+                <div class="user-info">
+                    <div class="user-avatar"></div>
+                    <div class="user-details">
+                        <h4>Sarah Johnson</h4>
+                        <p>Computer Science Student</p>
+                    </div>
+                </div>
             </div>
             <div class="card">
+                <div class="quote-icon">❝</div>
                 <p>"Incredibly intuitive and helpful for understanding complex topics. The automated note-taking feature is a game-changer."</p>
+                <div class="user-info">
+                    <div class="user-avatar"></div>
+                    <div class="user-details">
+                        <h4>Michael Chen</h4>
+                        <p>Engineering Professor</p>
+                    </div>
+                </div>
             </div>
             <div class="card">
+                <div class="quote-icon">❝</div>
                 <p>"The AI-driven insights have made my study sessions more productive. I love how it connects different educational topics seamlessly."</p>
+                <div class="user-info">
+                    <div class="user-avatar"></div>
+                    <div class="user-details">
+                        <h4>Priya Sharma</h4>
+                        <p>Medical Student</p>
+                    </div>
+                </div>
             </div>
             <div class="card">
+                <div class="quote-icon">❝</div>
                 <p>"A must-have tool for any student. The ability to ask questions and get precise answers with timestamps is invaluable."</p>
+                <div class="user-info">
+                    <div class="user-avatar"></div>
+                    <div class="user-details">
+                        <h4>James Wilson</h4>
+                        <p>High School Teacher</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="try-ai-kaksha">
         <div class="try-content">
-            <h2>Try AI Kaksha now</h2>
+            <h2>Try AI Kaksha Now</h2>
+            <p>Join thousands of students revolutionizing their learning experience</p>
         </div>
-        <div>
-            <button>Start Free Trial</button>
+        <div class="try-cta">
+            <button class="primary-btn">Start Free Trial</button>
+            <button class="secondary-btn">Schedule Demo</button>
+        </div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
         </div>
     </section>
 
     <footer>
-        <p>© 2025 AIKaksha. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AI Kaksha</h3>
+                <p>Revolutionizing education with AI-powered learning solutions.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                            <rect x="2" y="9" width="4" height="12"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <ul>
+                    <li>Email: info@aikaksha.com</li>
+                    <li>Phone: +1 (555) 123-4567</li>
+                    <li>Address: 123 AI Street, Tech City</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 AI Kaksha. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
     </footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const elements = document.querySelectorAll('header, .hero, .features, .testimonials, .try-ai-kaksha, footer');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
-                    } else {
-                        entry.target.style.opacity = 0;
-                        entry.target.style.transform = 'translateY(20px)';
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            elements.forEach(element => {
-                observer.observe(element);
-            });
-        });
-    </script>
+    <script type="module" src="landingpage.js"></script>
 </body>
 </html>

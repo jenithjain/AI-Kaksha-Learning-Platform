@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - AI Kaksha</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "gsap": "https://unpkg.com/gsap@3.12.4/index.js"
+        }
+    }
+    </script>
+    <style>
+        .page-header {
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #777;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .search-bar input[type="text"] , #resourceSearch{
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #4468F2; /* Match site color */
+            border-radius: 5px;
+            background-color: #1E293B; /* Match site color */
+            color: #C5C8E0;
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease;
+        }
+        .search-bar input[type="text"]:focus , #resourceSearch:focus{
+            border-color: #B9D9FF; /* Lighter border on focus */
+        }
+        .search-btn , .filter-btn{
+            background-color: #4468F2; /* Match site color */
+            color: #C5C8E0;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .search-btn:hover , .filter-btn:hover{
+            background-color: #B9D9FF;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1E293B; /* Match site color */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #C5C8E0;
+        }
+        .primary-btn {
+            background-color: #4468F2; /* Match site color */
+            color: #C5C8E0;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .primary-btn:hover {
+            background-color: #B9D9FF;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .resources-list {
+            margin-top: 20px;
+        }
+        .resources-placeholder {
+            color: #777;
+        }
+        .resource-category {
+            margin-bottom: 20px;
+        }
+        
+        .resource-category h4 {
+            color: #B9D9FF;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #4468F2;
+            padding-bottom: 5px;
+        }
+        
+        .resource-category ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .resource-category li {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(30, 41, 59, 0.5);
+            border-radius: 5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .resource-category li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background-color: rgba(30, 41, 59, 0.8);
+        }
+        
+        .resource-category a {
+            color: #4468F2;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .resource-category a:hover {
+            color: #B9D9FF;
+        }
+        
+        .resource-description {
+            color: #9DA0B8;
+            font-size: 0.9em;
+            margin: 5px 0 0 0;
+        }
+        
+        .loading-message {
+            text-align: center;
+            color: #9DA0B8;
+        }
+        
+        .loading-dots:after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+        
+        .error-message {
+            padding: 15px;
+            background-color: rgba(220, 38, 38, 0.1);
+            border-left: 4px solid #dc2626;
+            color: #fca5a5;
+            border-radius: 5px;
+        }
+        
+        .error-message a {
+            color: #4468F2;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <button class="toggle-sidebar">☰</button>
+    <div class="container">
+        <div id="sidebar-container"></div>
+        <main>
+            <div class="page-header">
+                <h1>Our Courses</h1>
+                <p>Explore our wide range of AI-powered courses designed to enhance your learning experience</p>
+            </div>
+
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" id="courseSearch" placeholder="Search for courses...">
+                    <button class="search-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="filter-options">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="ai">AI</button>
+                    <button class="filter-btn" data-filter="ml">Machine Learning</button>
+                    <button class="filter-btn" data-filter="data">Data Science</button>
+                </div>
+            </div>
+
+            <div class="courses-grid">
+                <div class="card course-card" data-category="ai">
+                    <div class="course-image">
+                        <img src="https://via.placeholder.com/300x200?text=AI+Fundamentals" alt="AI Fundamentals">
+                        <div class="course-badge">Beginner</div>
+                    </div>
+                    <div class="course-content">
+                        <h3>Introduction to AI</h3>
+                        <p>Learn the basics of artificial intelligence and its applications in the modern world.</p>
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>8 hours</span>
+                            </div>
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span>2,345 students</span>
+                            </div>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 75%"></div>
+                            </div>
+                            <span>75% complete</span>
+                        </div>
+                        <button class="primary-btn">Continue Learning</button>
+                    </div>
+                </div>
+
+                <div class="card course-card" data-category="ml">
+                    <div class="course-image">
+                        <img src="https://via.placeholder.com/300x200?text=Machine+Learning" alt="Machine Learning Basics">
+                        <div class="course-badge">Intermediate</div>
+                    </div>
+                    <div class="course-content">
+                        <h3>Machine Learning Basics</h3>
+                        <p>Master the fundamentals of machine learning algorithms and techniques.</p>
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>12 hours</span>
+                            </div>
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span>1,876 students</span>
+                            </div>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 30%"></div>
+                            </div>
+                            <span>30% complete</span>
+                        </div>
+                        <button class="primary-btn">Continue Learning</button>
+                    </div>
+                </div>
+
+                <div class="card course-card" data-category="data">
+                    <div class="course-image">
+                        <img src="https://via.placeholder.com/300x200?text=Data+Science" alt="Data Science Essentials">
+                        <div class="course-badge">Advanced</div>
+                    </div>
+                    <div class="course-content">
+                        <h3>Data Science Essentials</h3>
+                        <p>Learn how to analyze and interpret complex data sets using statistical methods.</p>
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>15 hours</span>
+                            </div>
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span>1,245 students</span>
+                            </div>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 0%"></div>
+                            </div>
+                            <span>Not started</span>
+                        </div>
+                        <button class="primary-btn">Start Course</button>
+                    </div>
+                </div>
+
+                <div class="card course-card" data-category="ai">
+                    <div class="course-image">
+                        <img src="https://via.placeholder.com/300x200?text=AI+in+Healthcare" alt="AI in Healthcare">
+                        <div class="course-badge">Specialized</div>
+                    </div>
+                    <div class="course-content">
+                        <h3>AI in Healthcare</h3>
+                        <p>Explore how artificial intelligence is transforming the healthcare industry.</p>
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>10 hours</span>
+                            </div>
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span>987 students</span>
+                            </div>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 0%"></div>
+                            </div>
+                            <span>Not started</span>
+                        </div>
+                        <button class="primary-btn">Start Course</button>
+                    </div>
+                </div>
+
+                <div class="card course-card" data-category="ml">
+                    <div class="course-image">
+                        <img src="https://via.placeholder.com/300x200?text=Deep+Learning" alt="Deep Learning with Python">
+                        <div class="course-badge">Advanced</div>
+                    </div>
+                    <div class="course-content">
+                        <h3>Deep Learning with Python</h3>
+                        <p>Build and train neural networks using Python and popular frameworks.</p>
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>18 hours</span>
+                            </div>
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span>1,543 students</span>
+                            </div>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 0%"></div>
+                            </div>
+                            <span>Not started</span>
+                        </div>
+                        <button class="primary-btn">Start Course</button>
+                    </div>
+                </div>
+
+                <div class="card course-card" data-category="data">
+                    <div class="course-image">
+                        <img src="https://via.placeholder.com/300x200?text=Data+Visualization" alt="Data Visualization">
+                        <div class="course-badge">Intermediate</div>
+                    </div>
+                    <div class="course-content">
+                        <h3>Data Visualization Techniques</h3>
+                        <p>Learn to create compelling visual representations of complex data sets.</p>
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>9 hours</span>
+                            </div>
+                            <div class="meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <span>1,120 students</span>
+                            </div>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 0%"></div>
+                            </div>
+                            <span>Not started</span>
+                        </div>
+                        <button class="primary-btn">Start Course</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card resources-card">
+                <h3>Suggested Resources</h3>
+                <div class="resources-search">
+                    <input type="text" id="resourceSearch" placeholder="Search for a topic...">
+                    <button id="searchButton" class="primary-btn">Search</button>
+                </div>
+                <div id="suggestedResourceList" class="resources-list">
+                    <p class="resources-placeholder">Enter a topic above to find related resources</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load the sidebar
+            fetch('sidebar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('sidebar-container').innerHTML = data;
+                });
+
+            // Toggle sidebar visibility
+            document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+                document.querySelector('main').classList.toggle('sidebar-hidden');
+            });
+
+            // Course filtering
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    filterCourses(filter);
+                });
+            });
+
+            function filterCourses(filter) {
+                const courses = document.querySelectorAll('.course-card');
+                
+                courses.forEach(course => {
+                    if (filter === 'all' || course.getAttribute('data-category') === filter) {
+                        course.style.display = 'flex';
+                    } else {
+                        course.style.display = 'none';
+                    }
+                });
+            }
+
+            // Course search
+            const searchInput = document.getElementById('courseSearch');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const courses = document.querySelectorAll('.course-card');
+                
+                courses.forEach(course => {
+                    const title = course.querySelector('h3').textContent.toLowerCase();
+                    const description = course.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        course.style.display = 'flex';
+                    } else {
+                        course.style.display = 'none';
+                    }
+                });
+            });
+
+            // Resource search
+            document.getElementById('searchButton').addEventListener('click', function() {
+                const query = document.getElementById('resourceSearch').value.trim();
+                if (!query) return;
+                
+                searchResources(query);
+            });
+
+            document.getElementById('resourceSearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (!query) return;
+                    
+                    searchResources(query);
+                }
+            });
+
+            function searchResources(query) {
+                const resourcesList = document.getElementById('suggestedResourceList');
+                resourcesList.innerHTML = '<p class="loading-message">Searching for resources... <span class="loading-dots">Processing</span></p>';
+                
+                // Call the API endpoint
+                fetch(`http://localhost:8000/resources/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('accessToken') // Get token from storage
+                    },
+                    body: JSON.stringify({
+                        topic: query
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Authentication required or server error');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resourcesList.innerHTML = '';
+                    
+                    // Create Coursera courses section
+                    if (data.resources.coursera_courses && data.resources.coursera_courses.length > 0) {
+                        const courseraSection = document.createElement('div');
+                        courseraSection.className = 'resource-category';
+                        
+                        courseraSection.innerHTML = `
+                            <h4>Coursera Courses</h4>
+                            <ul>
+                                ${data.resources.coursera_courses.map(course => `
+                                    <li>
+                                        <a href="${course.link}" target="_blank">${course.title}</a>
+                                        <p class="resource-description">${course.description}</p>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        `;
+                        
+                        resourcesList.appendChild(courseraSection);
+                    }
+                    
+                    // Create Udemy courses section
+                    if (data.resources.udemy_courses && data.resources.udemy_courses.length > 0) {
+                        const udemySection = document.createElement('div');
+                        udemySection.className = 'resource-category';
+                        
+                        udemySection.innerHTML = `
+                            <h4>Udemy Courses</h4>
+                            <ul>
+                                ${data.resources.udemy_courses.map(course => `
+                                    <li>
+                                        <a href="${course.link}" target="_blank">${course.title}</a>
+                                        <p class="resource-description">${course.description}</p>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        `;
+                        
+                        resourcesList.appendChild(udemySection);
+                    }
+                    
+                    // Create Books section
+                    if (data.resources.books && data.resources.books.length > 0) {
+                        const booksSection = document.createElement('div');
+                        booksSection.className = 'resource-category';
+                        
+                        booksSection.innerHTML = `
+                            <h4>Recommended Books</h4>
+                            <ul>
+                                ${data.resources.books.map(book => `
+                                    <li>
+                                        <a href="${book.link}" target="_blank">${book.title}</a>
+                                        <p class="resource-description">by ${book.author} - ${book.description}</p>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        `;
+                        
+                        resourcesList.appendChild(booksSection);
+                    }
+                    
+                    // Create YouTube tutorials section
+                    if (data.resources.youtube_tutorials && data.resources.youtube_tutorials.length > 0) {
+                        const youtubeSection = document.createElement('div');
+                        youtubeSection.className = 'resource-category';
+                        
+                        youtubeSection.innerHTML = `
+                            <h4>YouTube Tutorials</h4>
+                            <ul>
+                                ${data.resources.youtube_tutorials.map(tutorial => `
+                                    <li>
+                                        <a href="${tutorial.link}" target="_blank">${tutorial.title}</a>
+                                        <p class="resource-description">Channel: ${tutorial.channel}</p>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        `;
+                        
+                        resourcesList.appendChild(youtubeSection);
+                    }
+                    
+                    // If no resources found
+                    if (resourcesList.children.length === 0) {
+                        resourcesList.innerHTML = '<p class="resources-placeholder">No resources found for this topic. Try a different search term.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching resources:', error);
+                    
+                    if (error.message.includes('Authentication')) {
+                        resourcesList.innerHTML = `
+                            <div class="error-message">
+                                <p>Authentication required. Please <a href="login.html">login</a> to access resources.</p>
+                            </div>
+                        `;
+                    } else {
+                        resourcesList.innerHTML = `
+                            <div class="error-message">
+                                <p>Error loading resources. Please try again later.</p>
+                            </div>
+                        `;
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.body.classList.remove('page-transition');
+        });
+
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.tagName === 'A' && target.href && !target.href.startsWith('#') && !target.href.startsWith('javascript:')) {
+                event.preventDefault();
+                document.body.classList.add('page-transition');
+                setTimeout(() => {
+                    window.location.href = target.href;
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>

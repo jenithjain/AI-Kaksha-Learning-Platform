@@ -1,0 +1,64 @@
+.video-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.video-container iframe {
+    width: 600px;
+    height: 400px;
+    border: none;
+}
+
+.content-switcher {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.content-switcher button, #youtubeForm button ,button{
+    background-color: #4468F2; /* Ultramarine Blue */
+    color: #C5C8E0; /* Lavender Gray */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.content-switcher button:hover, #youtubeForm button:hover, button:hover {
+    background-color: #B9D9FF; /* Baby Purple */
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.content-section {
+    display: none;
+    text-align: center;
+    margin: 20px;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.input-group input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #64748B; /* Secondary (Muted Blue-Grey) */
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 10px;
+}
+
+.input-group input[type="text"]:focus {
+    border-color: #4468F2; /* Ultramarine Blue */
+    box-shadow: 0 0 5px rgba(68, 104, 242, 0.5);
+    outline: none;
+}
+.summary-section{
+    margin-top: 20px;
+    overflow: auto;
+}

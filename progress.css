@@ -1,0 +1,28 @@
+.achievement-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: start;
+}
+
+.badge {
+    background-color: #1E293B;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+    width: 150px;
+}
+
+.badge img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.badge p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: white;
+}

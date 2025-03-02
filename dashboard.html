@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AI Kaksha</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "gsap": "https://unpkg.com/gsap@3.12.4/index.js"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <button class="toggle-sidebar">☰</button>
+    <div class="container">
+        <div id="sidebar-container"></div>
+        <main>
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <p>Track your learning progress and performance</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Learning Streak</h3>
+                        <div class="stat-value">7 Days</div>
+                    </div>
+                </div>
+                
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20v-6M6 20V10M18 20V4"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Courses Completed</h3>
+                        <div class="stat-value">3</div>
+                    </div>
+                </div>
+                
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Achievements</h3>
+                        <div class="stat-value">12</div>
+                    </div>
+                </div>
+                
+                <div class="card stat-card">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Study Groups</h3>
+                        <div class="stat-value">2</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="card chart-card">
+                    <h3>Performance by Subject</h3>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card chart-card">
+                    <h3>Weekly Progress</h3>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="card chart-card">
+                    <h3>Activity Overview</h3>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>AI Recommendations</h3>
+                    <div class="recommendations-list">
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                </svg>
+                            </div>
+                            <div class="recommendation-content">
+                                <h4>Complete Machine Learning Basics</h4>
+                                <p>You're 80% through this course. Finish it to unlock advanced topics.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div class="recommendation-content">
+                                <h4>Review Neural Networks</h4>
+                                <p>Your quiz scores indicate you might benefit from revisiting this topic.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"></path>
+                                    <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                                </svg>
+                            </div>
+                            <div class="recommendation-content">
+                                <h4>Try "Deep Learning with Python"</h4>
+                                <p>Based on your interests and progress, this course would be a good next step.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Recent Activity</h3>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Completed Quiz: Neural Networks</h4>
+                            <p>Score: 85% · 2 hours ago</p>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Earned Achievement: Fast Learner</h4>
+                            <p>Completed 3 lessons in one day · Yesterday</p>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Watched: Introduction to Deep Learning</h4>
+                            <p>Duration: 45 minutes · 2 days ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load the sidebar
+            fetch('sidebar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('sidebar-container').innerHTML = data;
+                });
+
+            // Toggle sidebar visibility
+            document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+                document.querySelector('main').classList.toggle('sidebar-hidden');
+            });
+
+            // Example data for charts
+            const performanceData = {
+                labels: ['Math', 'Science', 'History', 'English', 'Programming'],
+                datasets: [{
+                    label: 'Performance Score',
+                    data: [85, 92, 78, 88, 95],
+                    backgroundColor: 'rgba(68, 104, 242, 0.7)',
+                    borderColor: 'rgba(68, 104, 242, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const progressData = {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Hours Studied',
+                    data: [8, 12, 15, 20],
+                    backgroundColor: 'rgba(185, 217, 255, 0.2)',
+                    borderColor: 'rgba(185, 217, 255, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            };
+
+            const activityData = {
+                labels: ['Assignments', 'Quizzes', 'Videos', 'Reading', 'Projects'],
+                datasets: [{
+                    label: 'Activities Completed',
+                    data: [15, 8, 22, 12, 5],
+                    backgroundColor: [
+                        'rgba(68, 104, 242, 0.7)',
+                        'rgba(185, 217, 255, 0.7)',
+                        'rgba(111, 66, 193, 0.7)',
+                        'rgba(94, 234, 212, 0.7)',
+                        'rgba(248, 113, 113, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(68, 104, 242, 1)',
+                        'rgba(185, 217, 255, 1)',
+                        'rgba(111, 66, 193, 1)',
+                        'rgba(94, 234, 212, 1)',
+                        'rgba(248, 113, 113, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            // Create charts
+            const performanceChart = new Chart(document.getElementById('performanceChart'), {
+                type: 'bar',
+                data: performanceData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(197, 200, 224, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(197, 200, 224, 0.8)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(197, 200, 224, 0.8)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const progressChart = new Chart(document.getElementById('progressChart'), {
+                type: 'line',
+                data: progressData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(197, 200, 224, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(197, 200, 224, 0.8)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(197, 200, 224, 0.8)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const activityChart = new Chart(document.getElementById('activityChart'), {
+                type: 'doughnut',
+                data: activityData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: 'rgba(197, 200, 224, 0.8)'
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.body.classList.remove('page-transition');
+        });
+
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.tagName === 'A' && target.href && !target.href.startsWith('#') && !target.href.startsWith('javascript:')) {
+                event.preventDefault();
+                document.body.classList.add('page-transition');
+                setTimeout(() => {
+                    window.location.href = target.href;
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Room Chat - AI Kaksha</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "gsap": "https://unpkg.com/gsap@3.12.4/index.js"
+        }
+    }
+    </script>
+    <style>
+        /* Chat container styles */
+        .chat-container {
+            display: flex;
+            height: calc(100vh - 80px);
+            background: #0F172A;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .chat-content {
+            flex: 1;
+            display: flex;
+        }
+
+        .room-sidebar {
+            width: 250px;
+            background: #1E293B;
+            border-right: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-list {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .room-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #C5C8E0;
+        }
+
+        .room-item:hover {
+            background: #334155;
+        }
+
+        .room-item.active {
+            background: #4468F2;
+            font-weight: 500;
+        }
+
+        .create-room {
+            padding: 1rem;
+            border-top: 1px solid #334155;
+        }
+
+        .create-room input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            background: #1E293B;
+            color: #C5C8E0;
+        }
+
+        .create-room button {
+            width: 100%;
+            padding: 0.5rem;
+            background: #4468F2;
+            color: #C5C8E0;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .create-room button:hover {
+            background: #B9D9FF;
+            transform: translateY(-2px);
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #1E293B;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #C5C8E0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #0F172A;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            max-width: 80%;
+        }
+
+        .message.received {
+            background: #1E293B;
+            color: #C5C8E0;
+            margin-right: auto;
+        }
+
+        .message.sent {
+            background: #4468F2;
+            color: #C5C8E0;
+            margin-left: auto;
+        }
+
+        .message.system {
+            background: #334155;
+            color: #B9D9FF;
+            margin: 1rem auto;
+            text-align: center;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #334155;
+            display: flex;
+            gap: 0.5rem;
+            background: #1E293B;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #334155;
+            border-radius: 0.375rem;
+            background: #0F172A;
+            color: #C5C8E0;
+        }
+
+        .send-button, .audio-button {
+            padding: 0.5rem 1rem;
+            background: #4468F2;
+            color: #C5C8E0;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-button:hover, .audio-button:hover {
+            background: #B9D9FF;
+            transform: translateY(-2px);
+        }
+
+        .audio-button.recording {
+            background: #dc2626;
+        }
+
+        .user-list {
+            padding: 1rem;
+            border-top: 1px solid #334155;
+            color: #C5C8E0;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .user-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .user-status.offline {
+            background: #9ca3af;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        .floating-element:nth-child(1) {
+            animation-delay: 2s;
+            left: 20%;
+            top: 30%;
+        }
+
+        .floating-element:nth-child(2) {
+            animation-delay: 5s;
+            left: 70%;
+            top: 10%;
+        }
+
+        .floating-element:nth-child(3) {
+            animation-delay: 1s;
+            left: 40%;
+            top: 60%;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('noise.png');
+            background-size: 100px 100px;
+            opacity: 0.1;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .room-sidebar {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-content {
+                flex-direction: column;
+            }
+
+            .room-sidebar {
+                width: 100%;
+                max-height: 300px;
+                border-right: none;
+                border-bottom: 1px solid #334155;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    
+    <button class="toggle-sidebar">☰</button>
+    <div class="container">
+        <div id="sidebar-container"></div>
+        <main>
+            <div class="page-header">
+                <h1>Study Room Chat</h1>
+                <p>Connect with other students in real-time study rooms</p>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-content">
+                    <div class="room-sidebar">
+                        <div class="room-list">
+                            <h3>Study Rooms</h3>
+                            <!-- Rooms will be dynamically added here -->
+                        </div>
+
+                        <div class="create-room">
+                            <h3>Create New Room</h3>
+                            <input type="text" id="room-name" placeholder="Room Name">
+                            <button id="create-room-btn">Create Room</button>
+                        </div>
+
+                        <div class="user-list">
+                            <h3>Online Users</h3>
+                            <!-- Users will be dynamically added here -->
+                        </div>
+                    </div>
+
+                    <div class="chat-main">
+                        <div class="chat-header">
+                            <h2 id="current-room">General Discussion</h2>
+                            <span id="online-count">0 online</span>
+                        </div>
+
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Messages will be dynamically added here -->
+                        </div>
+
+                        <div class="chat-input">
+                            <input type="text" class="message-input" id="message-input" placeholder="Type your message...">
+                            <button class="send-button" id="send-button">Send</button>
+                            <button class="audio-button" id="audio-button">🎤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load the sidebar
+            fetch('sidebar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('sidebar-container').innerHTML = data;
+                });
+
+            // Toggle sidebar visibility
+            document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+                document.querySelector('main').classList.toggle('sidebar-hidden');
+            });
+        });
+        // Get username from prompt or session storage
+        let username = sessionStorage.getItem('username');
+        if (!username) {
+            username = prompt("Enter your username:", "Anonymous");
+            if (!username) username = "Anonymous";
+            sessionStorage.setItem('username', username);
+        }
+
+        // WebSocket connection
+        const socket = new WebSocket('ws://localhost:8000/ws/chat/');
+        let currentRoom = 'General Discussion';
+
+        // DOM Elements
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const audioButton = document.getElementById('audio-button');
+        const chatMessages = document.getElementById('chat-messages');
+        const createRoomBtn = document.getElementById('create-room-btn');
+        const roomNameInput = document.getElementById('room-name');
+        const currentRoomHeader = document.getElementById('current-room');
+        const onlineCount = document.getElementById('online-count');
+
+        // Connection event handlers
+        socket.onopen = () => {
+            console.log('Connected to chat server');
+            addSystemMessage('Connected to chat server');
+            // Join default room on connection
+            socket.send(JSON.stringify({
+                type: 'join_room',
+                username: username,
+                room: currentRoom
+            }));
+        };
+
+        socket.onclose = () => {
+            console.log('Disconnected from chat server');
+            addSystemMessage('Disconnected from server. Please refresh the page.');
+        };
+
+        socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            addSystemMessage('Error connecting to server.');
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            handleMessage(data);
+        };
+
+        // Message handling
+        function handleMessage(data) {
+            switch(data.type) {
+                case 'chat':
+                    addMessage(data.username, data.message, data.username === username);
+                    break;
+                case 'audio':
+                    playAudioMessage(data.audio, data.username);
+                    break;
+                case 'user_list':
+                    updateUserList(data.users);
+                    break;
+                case 'room_list':
+                    updateRoomList(data.rooms);
+                    break;
+            }
+        }
+
+        function addMessage(username, message, isSent) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+            messageDiv.innerHTML = `
+                <strong>${username}</strong><br>
+                ${message}
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addSystemMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system';
+            messageDiv.innerHTML = `<em>${message}</em>`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                socket.send(JSON.stringify({
+                    type: 'chat',
+                    room: currentRoom,
+                    username: username,
+                    message: message
+                }));
+                messageInput.value = '';
+            }
+        }
+
+        // Room management
+        function joinRoom(roomName) {
+            socket.send(JSON.stringify({
+                type: 'join_room',
+                room: roomName,
+                username: username
+            }));
+            currentRoom = roomName;
+            currentRoomHeader.textContent = roomName;
+            chatMessages.innerHTML = '';
+            addSystemMessage(`Joined room: ${roomName}`);
+        }
+
+        createRoomBtn.addEventListener('click', () => {
+            const roomName = roomNameInput.value.trim();
+            if (roomName) {
+                socket.send(JSON.stringify({
+                    type: 'create_room',
+                    room: roomName
+                }));
+                roomNameInput.value = '';
+            }
+        });
+
+        function updateRoomList(rooms) {
+            const roomList = document.querySelector('.room-list');
+            const roomsHtml = rooms.map(room => `
+                <div class="room-item ${room === currentRoom ? 'active' : ''}">${room}</div>
+            `).join('');
+            
+            roomList.innerHTML = `
+                <h3>Study Rooms</h3>
+                ${roomsHtml}
+            `;
+            
+            // Reattach event listeners
+            document.querySelectorAll('.room-item').forEach(item => {
+                item.addEventListener('click', () => joinRoom(item.textContent));
+            });
+        }
+
+        function updateUserList(users) {
+            const userList = document.querySelector('.user-list');
+            const usersHtml = users.map(user => `
+                <div class="user-item">
+                    <span class="user-status ${user.online ? '' : 'offline'}"></span>
+                    <span>${user.username}</span>
+                </div>
+            `).join('');
+            
+            userList.innerHTML = `
+                <h3>Online Users</h3>
+                ${usersHtml}
+            `;
+
+            onlineCount.textContent = `${users.length} online`;
+        }
+
+        // Audio message handling
+        let mediaRecorder;
+        let audioChunks = [];
+
+        audioButton.addEventListener('click', toggleAudioRecording);
+
+        async function toggleAudioRecording() {
+            if (!mediaRecorder) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        sendAudioMessage(audioBlob);
+                        audioChunks = [];
+                    };
+
+                    audioButton.classList.add('recording');
+                    mediaRecorder.start();
+                    addSystemMessage('Recording started...');
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                    addSystemMessage('Error accessing microphone. Please check permissions.');
+                }
+            } else {
+                audioButton.classList.remove('recording');
+                mediaRecorder.stop();
+                addSystemMessage('Recording stopped.');
+                mediaRecorder = null;
+            }
+        }
+
+        function sendAudioMessage(audioBlob) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                socket.send(JSON.stringify({
+                    type: 'audio',
+                    room: currentRoom,
+                    username: username,
+                    audio: reader.result
+                }));
+            };
+            reader.readAsDataURL(audioBlob);
+        }
+
+        function playAudioMessage(audioData, senderUsername) {
+            const audio = new Audio(audioData);
+            audio.play();
+            addMessage(senderUsername, '🔊 Sent an audio message', senderUsername === username);
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.body.classList.remove('page-transition');
+        });
+
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.tagName === 'A' && target.href && !target.href.startsWith('#') && !target.href.startsWith('javascript:')) {
+                event.preventDefault();
+                document.body.classList.add('page-transition');
+                setTimeout(() => {
+                    window.location.href = target.href;
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html> 

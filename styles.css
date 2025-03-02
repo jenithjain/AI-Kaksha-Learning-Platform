@@ -1,0 +1,329 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --primary: #4468f2;
+  --primary-light: #5a7af5;
+  --primary-dark: #3a56c7;
+  --secondary: #b9d9ff;
+  --secondary-dark: #8abaee;
+  --text-light: #c5c8e0;
+  --text-dark: #9da0b8;
+  --bg-dark: #0e0e0f;
+  --bg-card: #1e293b;
+  --bg-card-hover: #2a3a50;
+  --transition-fast: 0.3s ease;
+  --transition-medium: 0.5s ease;
+  --transition-slow: 0.8s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  line-height: 1.6;
+  font-size: 16px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  margin-left: 250px;
+  padding: 80px 30px 30px;
+  transition: margin-left var(--transition-fast);
+}
+
+main.sidebar-hidden {
+  margin-left: 0;
+}
+
+.page-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--text-light) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-header p {
+  color: var(--text-dark);
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: var(--text-light);
+  position: relative;
+  display: inline-block;
+}
+
+.card h3::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  border-radius: 3px;
+}
+
+/* Buttons */
+button {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: var(--transition-fast);
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+.primary-btn {
+  background-color: var(--primary);
+  color: var(--text-light);
+  padding: 10px 20px;
+  box-shadow: 0 4px 15px rgba(68, 104, 242, 0.3);
+}
+
+.primary-btn:hover {
+  background-color: var(--primary-light);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(68, 104, 242, 0.4);
+}
+
+.secondary-btn {
+  background-color: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--secondary);
+  padding: 10px 20px;
+}
+
+.secondary-btn:hover {
+  background-color: rgba(185, 217, 255, 0.1);
+  transform: translateY(-3px);
+}
+
+/* AI Assistant Page */
+.ai-interface {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.video-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.sidebar-content {
+  width: 350px;
+}
+
+.video-container {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-dark);
+}
+
+.placeholder-icon {
+  margin-bottom: 15px;
+  color: var(--primary);
+  opacity: 0.7;
+}
+
+.content-switcher {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  background-color: var(--bg-card);
+  color: var(--text-dark);
+  border-radius: 8px;
+  transition: all var(--transition-fast);
+  min-width: 80px;
+}
+
+.tab-btn:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text-light);
+}
+
+.tab-btn.active {
+  background-color: var(--primary);
+  color: var(--text-light);
+}
+
+.content-section {
+  display: none;
+}
+
+.content-section.active {
+  display: block;
+}
+
+.content-card {
+  height: 400px;
+  overflow-y: auto;
+}
+
+.summary-card,
+.chat-card {
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+.summary-content,
+.chat-history {
+  height: 200px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.chat-history {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chat-message {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.chat-message.user {
+  justify-content: flex-end;
+}
+
+.message-content {
+  max-width: 80%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.chat-message.ai .message-content {
+  background-color: var(--bg-card-hover);
+  border-top-left-radius: 0;
+}
+
+.chat-message.user .message-content {
+  background-color: var(--primary);
+  border-top-right-radius: 0;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid rgba(197, 200, 224, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    color: var(--text-light);
+}

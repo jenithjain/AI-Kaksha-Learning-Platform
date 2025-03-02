@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0E0E0F;
+    color: #C5C8E0;
+    line-height: 1.6;
+    font-size: 18px;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    margin-left: 250px; /* Adjust for the fixed sidebar width */
+    display: block; /* Changed from grid to block to stack elements vertically */
+    padding: 20px;
+}
+
+section {
+    background-color: #1E293B;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    color: #C5C8E0;
+    margin-bottom: 20px; /* Added margin to separate sections */
+}

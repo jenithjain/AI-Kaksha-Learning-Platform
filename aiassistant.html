@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - AI Kaksha</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "gsap": "https://unpkg.com/gsap@3.12.4/index.js"
+        }
+    }
+    </script>
+    <style>
+        .ai-interface {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+        .video-section {
+            flex: 1.5;
+            padding-right: 20px;
+        }
+        .summary-section {
+            flex: 1;
+            background-color: #1E293B;
+            padding: 20px;
+            border-radius: 8px;
+            color: #C5C8E0;
+        }
+        .summary-section h3 {
+            margin-bottom: 10px;
+        }
+        .content-switcher {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .content-switcher button, button {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            background-color: #4468F2; /* Updated to match site color */
+            color: #C5C8E0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .content-switcher button:hover, button:hover {
+            background-color: #B9D9FF;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .qna-input {
+            margin-top: 10px;
+        }
+        .qna-input input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #64748B;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            background-color: #1E293B; /* Updated to match site color */
+            color: #C5C8E0;
+        }
+        .youtube-form .input-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #4468F2; /* Match site color */
+            border-radius: 5px;
+            background-color: #1E293B; /* Match site color */
+            color: #C5C8E0;
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease;
+        }
+        .youtube-form .input-group input[type="text"]:focus {
+            border-color: #B9D9FF; /* Lighter border on focus */
+        }
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+        .quiz-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .quiz-feedback.correct {
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+        .quiz-feedback.incorrect {
+            background-color: #F8D7DA;
+            color: #721C24;
+        }
+        .card {
+            background-color: #1E293B; /* Updated to match site color */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            color: #C5C8E0;
+        }
+        .content-card {
+            margin-bottom: 0;
+        }
+        .primary-btn {
+            background-color: #4468F2; /* Updated to match site color */
+            color: #C5C8E0;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .primary-btn:hover {
+            background-color: #B9D9FF;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .tab-btn {
+            background-color: transparent;
+            border: none;
+            color: #4468F2; /* Updated to match site color */
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .tab-btn.active {
+            background-color: #4468F2; /* Updated to match site color */
+            color: white;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .notes-placeholder, .summary-placeholder {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            height: 100px;
+            justify-content: space-around;
+        }
+        .placeholder-line {
+            height: 2px;
+            background-color: #eee;
+        }
+        .loading-dots {
+            animation: loading 1s infinite;
+        }
+        @keyframes loading {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+            100% { content: '.'; }
+        }
+        .chat-history {
+            height: 160px;
+            overflow: auto;
+            padding: 10px;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .chat-message.user {
+            background-color: #e7f2fa;
+            align-self: flex-end;
+        }
+        .chat-message.ai {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #1E293B; /* Updated to match site color */
+            color: #C5C8E0;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quiz-option {
+            background-color: #1E293B; /* Updated to match site color */
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #C5C8E0;
+        }
+        .quiz-option.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .quiz-option.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .quiz-complete {
+            text-align: center;
+        }
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('noise.png'); /* Replace with your noise texture */
+            background-size: 100px 100px;
+            opacity: 0.1;
+            z-index: -1; /* Place behind other elements */
+            pointer-events: none; /* Prevent overlay from interfering with clicks */
+        }
+        .page-header {
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #777;
+        }
+        .sidebar-content {
+            flex: 1;
+            padding-left: 20px;
+        }
+        .summary-card, .chat-card {
+            margin-bottom: 20px;
+        }
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .floating-element {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        .floating-element:nth-child(1) {
+            animation-delay: 2s;
+            left: 20%;
+            top: 30%;
+        }
+        .floating-element:nth-child(2) {
+            animation-delay: 5s;
+            left: 70%;
+            top: 10%;
+        }
+        .floating-element:nth-child(3) {
+            animation-delay: 1s;
+            left: 40%;
+            top: 60%;
+        }
+        .video-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+        }
+        .placeholder-icon {
+            margin-bottom: 10px;
+        }
+        .notes-list {
+            list-style: disc;
+            padding-left: 20px;
+        }
+        .transcript-text {
+            line-height: 1.5;
+        }
+        .timestamp {
+            color: #777;
+            margin-right: 5px;
+        }
+        .qna-responses {
+            margin-top: 10px;
+        }
+        .qna-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #1E293B; /* Updated to match site color */
+            color: #C5C8E0;
+        }
+        .qna-question, .qna-answer {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <button class="toggle-sidebar">☰</button>
+    <div class="container">
+        <div id="sidebar-container"></div>
+        <main>
+            <div class="page-header">
+                <h1>AI Assistant</h1>
+                <p>Upload a video and let our AI analyze it for you</p>
+            </div>
+
+            <div class="card">
+                <form id="youtubeForm" class="youtube-form">
+                    <div class="input-group">
+                        <label>Enter YouTube URL:</label>
+                        <input type="text" id="youtubeUrl" placeholder="e.g., https://www.youtube.com/watch?v=example">
+                    </div>
+                    <button type="submit" class="primary-btn">Load Video</button>
+                </form>
+            </div>
+
+            <div class="ai-interface">
+                <div class="video-section">
+                    <div class="video-container" id="videoContainer">
+                        <div class="video-placeholder">
+                            <div class="placeholder-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                                </svg>
+                            </div>
+                            <p>Enter a YouTube URL to load a video</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-switcher">
+                        <button data-target="short-notes" class="tab-btn active">Notes</button>
+                        <button data-target="quiz" class="tab-btn">Quiz</button>
+                        <button data-target="qna" class="tab-btn">Q&A</button>
+                        <button data-target="transcript" class="tab-btn">Transcript</button>
+                    </div>
+                    
+                    <div class="content-section active" id="short-notes">
+                        <div class="card content-card">
+                            <h3>Short Notes</h3>
+                            <div class="notes-content">
+                                <p>Enter a YouTube URL above to generate AI-powered notes from the video content.</p>
+                                <div class="notes-placeholder">
+                                    <div class="placeholder-line"></div>
+                                    <div class="placeholder-line"></div>
+                                    <div class="placeholder-line"></div>
+                                    <div class="placeholder-line"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section" id="quiz">
+                        <div class="card content-card">
+                            <h3>Knowledge Check</h3>
+                            <div id="quizContainer">
+                                <p>AI-generated quiz will appear here after video analysis.</p>
+                            </div>
+                            <div id="quizScore"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section" id="qna">
+                        <div class="card content-card">
+                            <h3>Ask Questions</h3>
+                            <p>Ask specific questions about the video content</p>
+                            <div class="qna-input">
+                                <input type="text" id="aiPrompt" placeholder="Ask the AI about the video content...">
+                                <button id="submitPrompt" class="primary-btn">Submit</button>
+                            </div>
+                            <div id="qnaResponses" class="qna-responses">
+                                <!-- AI responses will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section" id="transcript">
+                        <div class="card content-card">
+                            <h3>Video Transcript</h3>
+                            <div class="transcript-content">
+                                <p>The full transcript will appear here after video analysis.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-content">
+                    <div class="card summary-card">
+                        <h3>Video Summary</h3>
+                        <div class="summary-content">
+                            <p>This is where the AI-generated summary of the video will be displayed after analysis.</p>
+                            <div class="summary-placeholder">
+                                <div class="placeholder-line"></div>
+                                <div class="placeholder-line"></div>
+                                <div class="placeholder-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card chat-card">
+                        <h3>AI Chat</h3>
+                        <div id="chatHistory" class="chat-history">
+                            <div class="chat-message ai">
+                                <div class="message-content">
+                                    <p>Hello! I'm your AI learning assistant. How can I help you today?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="Type your message...">
+                            <button id="sendChat" class="primary-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load the sidebar
+            fetch('sidebar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('sidebar-container').innerHTML = data;
+                });
+
+            // Toggle sidebar visibility
+            document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+                document.querySelector('main').classList.toggle('sidebar-hidden');
+            });
+
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and sections
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button and corresponding section
+                    this.classList.add('active');
+                    const targetId = this.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // YouTube form submission
+            document.getElementById('youtubeForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const youtubeUrl = document.getElementById('youtubeUrl').value;
+                if (!youtubeUrl) return;
+                
+                let videoId = youtubeUrl.split('v=')[1];
+                if (!videoId) return;
+                
+                const ampersandPosition = videoId.indexOf('&');
+                if (ampersandPosition !== -1) {
+                    videoId = videoId.substring(0, ampersandPosition);
+                }
+                
+                const videoContainer = document.getElementById('videoContainer');
+                videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
+                
+                // Simulate loading AI analysis
+                simulateAIAnalysis();
+            });
+
+            // Chat functionality
+            document.getElementById('sendChat').addEventListener('click', sendChatMessage);
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendChatMessage();
+                }
+            });
+
+            function sendChatMessage() {
+                const chatInput = document.getElementById('chatInput');
+                const message = chatInput.value.trim();
+                if (!message) return;
+                
+                // Add user message
+                addChatMessage(message, 'user');
+                chatInput.value = '';
+                
+                // Simulate AI response after a short delay
+                setTimeout(() => {
+                    const responses = [
+                        "I can help you understand that concept better. Let me explain...",
+                        "That's a great question! Based on the video content...",
+                        "I've analyzed the video and can provide more context on that topic.",
+                        "Let me check the video transcript for more information on that."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addChatMessage(randomResponse, 'ai');
+                }, 1000);
+            }
+
+            function addChatMessage(message, sender) {
+                const chatHistory = document.getElementById('chatHistory');
+                const messageElement = document.createElement('div');
+                messageElement.className = `chat-message ${sender}`;
+                
+                messageElement.innerHTML = `
+                    <div class="message-content">
+                        <p>${message}</p>
+                    </div>
+                `;
+                
+                chatHistory.appendChild(messageElement);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }
+
+            // Q&A functionality
+            document.getElementById('submitPrompt').addEventListener('click', function() {
+                const prompt = document.getElementById('aiPrompt').value.trim();
+                if (!prompt) return;
+                
+                const qnaResponses = document.getElementById('qnaResponses');
+                
+                // Add user question
+                const questionElement = document.createElement('div');
+                questionElement.className = 'qna-item';
+                questionElement.innerHTML = `
+                    <div class="qna-question">
+                        <strong>Q:</strong> ${prompt}
+                    </div>
+                    <div class="qna-answer">
+                        <strong>A:</strong> <span class="loading-dots">Analyzing video content</span>
+                    </div>
+                `;
+                qnaResponses.appendChild(questionElement);
+                
+                // Clear input
+                document.getElementById('aiPrompt').value = '';
+                
+                // Simulate AI response after a delay
+                setTimeout(() => {
+                    const answerElement = questionElement.querySelector('.qna-answer');
+                    answerElement.innerHTML = `
+                        <strong>A:</strong> Based on the video content, I can tell you that this topic is covered at 2:45. The key points are that AI systems use neural networks to process information similar to how human brains work, but at a much faster rate.
+                    `;
+                }, 2000);
+            });
+
+            // Mock quiz data
+            const quizData = [
+                {
+                    question: "What is the capital of France?",
+                    options: ["Berlin", "Madrid", "Paris", "Rome"],
+                    answer: "Paris"
+                },
+                {
+                    question: "What is 2 + 2?",
+                    options: ["3", "4", "5", "6"],
+                    answer: "4"
+                }
+            ];
+
+            let currentQuestion = 0;
+            let score = 0;
+
+            function loadQuiz() {
+                const quizContainer = document.getElementById('quizContainer');
+                const questionData = quizData[currentQuestion];
+                
+                quizContainer.innerHTML = `
+                    <div class="quiz-question">
+                        <h4>${questionData.question}</h4>
+                        <div class="quiz-options">
+                            ${questionData.options.map(option => `
+                                <button class="quiz-option">${option}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="quizFeedback"></div>
+                `;
+
+                document.querySelectorAll('.quiz-option').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const feedback = document.getElementById('quizFeedback');
+                        
+                        if (this.textContent === questionData.answer) {
+                            score++;
+                            feedback.textContent = `Correct! The answer is ${questionData.answer}.`;
+                            feedback.className = 'quiz-feedback correct';
+                            this.classList.add('correct');
+                        } else {
+                            feedback.textContent = `Incorrect. The correct answer is ${questionData.answer}.`;
+                            feedback.className = 'quiz-feedback incorrect';
+                            this.classList.add('incorrect');
+                        }
+                        
+                        feedback.style.display = 'block';
+                        
+                        // Disable all options after selection
+                        document.querySelectorAll('.quiz-option').forEach(btn => {
+                            btn.disabled = true;
+                        });
+                        
+                        setTimeout(() => {
+                            feedback.style.display = 'none';
+                            currentQuestion++;
+                            
+                            if (currentQuestion < quizData.length) {
+                                loadQuiz();
+                            } else {
+                                document.getElementById('quizScore').innerHTML = `
+                                    <div class="quiz-complete">
+                                        <h4>Quiz Complete!</h4>
+                                        <p>Your score: ${score}/${quizData.length}</p>
+                                        <button class="primary-btn" onclick="resetQuiz()">Try Again</button>
+                                    </div>
+                                `;
+                            }
+                        }, 2000);
+                    });
+                });
+            }
+
+            // Function to simulate AI analysis of video
+            function simulateAIAnalysis() {
+                // Show loading states
+                document.querySelector('.notes-content').innerHTML = '<p>Analyzing video content... <span class="loading-dots">Processing</span></p>';
+                document.querySelector('.summary-content').innerHTML = '<p>Generating summary... <span class="loading-dots">Processing</span></p>';
+                document.querySelector('.transcript-content').innerHTML = '<p>Extracting transcript... <span class="loading-dots">Processing</span></p>';
+                
+                // After a delay, show "results"
+                setTimeout(() => {
+                    // Update notes
+                    document.querySelector('.notes-content').innerHTML = `
+                        <ul class="notes-list">
+                            <li>Neural networks form the foundation of modern AI systems</li>
+                            <li>Deep learning allows AI to recognize patterns in data</li>
+                            <li>Supervised learning requires labeled training data</li>
+                            <li>Unsupervised learning finds patterns without labeled data</li>
+                            <li>Reinforcement learning uses reward systems to train AI</li>
+                        </ul>
+                    `;
+                    
+                    // Update summary
+                    document.querySelector('.summary-content').innerHTML = `
+                        <p>This video provides a comprehensive introduction to artificial intelligence and its core concepts. It covers the history of AI development, explains different learning approaches, and discusses real-world applications. The presenter emphasizes the importance of ethical considerations in AI development.</p>
+                    `;
+                    
+                    // Update transcript
+                    document.querySelector('.transcript-content').innerHTML = `
+                        <div class="transcript-text">
+                            <p><span class="timestamp">0:00</span> Welcome to this introduction to artificial intelligence.</p>
+                            <p><span class="timestamp">0:15</span> Today we'll explore the fundamental concepts behind AI systems.</p>
+                            <p><span class="timestamp">0:30</span> Let's start by understanding what neural networks are.</p>
+                            <p><span class="timestamp">1:05</span> Neural networks are inspired by the human brain's structure.</p>
+                            <p><span class="timestamp">1:45</span> Deep learning is a subset of machine learning that uses multiple layers.</p>
+                            <p><span class="timestamp">2:20</span> Now let's discuss supervised learning approaches.</p>
+                            <p><span class="timestamp">3:10</span> Unsupervised learning works differently by finding patterns without labels.</p>
+                            <p><span class="timestamp">4:00</span> Reinforcement learning uses reward systems to train AI models.</p>
+                            <p><span class="timestamp">5:15</span> Let's look at some real-world applications of these technologies.</p>
+                            <p><span class="timestamp">6:30</span> Ethical considerations are crucial when developing AI systems.</p>
+                            <p><span class="timestamp">7:45</span> In conclusion, AI continues to evolve rapidly and transform industries.</p>
+                        </div>
+                    `;
+                    
+                    // Load quiz
+                    loadQuiz();
+                }, 3000);
+            }
+
+            // Make resetQuiz function globally available
+            window.resetQuiz = function() {
+                currentQuestion = 0;
+                score = 0;
+                loadQuiz();
+            };
+        });
+    </script>
+</body>
+</html>
