@@ -153,9 +153,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # API Configuration
-API_URL = "https://cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com/v1/chat/completions"
-API_KEY = "397f941041mshd6acdea38ef7c25p1e3acejsn6c8898d2e39a"
-API_HOST = "cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com"
+API_URL = "https://cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api"
+API_KEY = "**************************************************"
+API_HOST = "cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api."
 
 # Function definitions from both files
 def query_gpt4o(prompt, max_tokens=1000):
