@@ -111,7 +111,7 @@ st.markdown("""
 import google.generativeai as genai
 
 # Configure Gemini
-genai.configure(api_key="AIzaSyC9EzOBSiAfCtnrorevBdKm6-bJ81eQwUw")
+genai.configure(api_key="*************************************")
 
 # Initialize session state
 if 'chat_history' not in st.session_state:
