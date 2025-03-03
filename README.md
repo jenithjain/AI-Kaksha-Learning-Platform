@@ -11,7 +11,7 @@ AI Kaksha is a modern e-learning platform that combines artificial intelligence 
 - Personalized learning recommendations
 - Intelligent doubt solving
 - Real-time concept explanations
-- Interactive code assistance
+- Interactive code assistance.
 
 ### 2. Study Chat Rooms
 - Real-time group discussions
