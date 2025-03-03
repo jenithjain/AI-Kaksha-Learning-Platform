@@ -14,8 +14,8 @@ import sys
 import re
 
 # Configure API keys
-GOOGLE_API_KEY = "AIzaSyAyxSMsMuEHUhicLwis0HPk4JPKco_VLWA"
-YOUTUBE_API_KEY = "AIzaSyBchJihI308BiRhFW2b6y7SBPf6fkni4_0"
+GOOGLE_API_KEY = "***************************************"
+YOUTUBE_API_KEY = "*************************************"
 genai.configure(api_key=GOOGLE_API_KEY)
 
 # Initialize FastAPI app
