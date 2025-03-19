@@ -43,7 +43,6 @@ AI Kaksha is a modern e-learning platform that combines artificial intelligence 
 - (Optional) Microphone for voice messages
 
 ### Installation
-
 1. Clone the repository:
 ```bash
 git clone https://github.com/ebrahimgamdiwala/AI-Kaksha.git
