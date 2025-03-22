@@ -1,7 +1,11 @@
 # AI Kaksha Learning Platform
 ## Demo Video
 
-https://github.com/user-attachments/assets/972e8e54-d943-447f-85fa-6577cf26a316
+
+
+https://github.com/user-attachments/assets/d0ee1aee-2f55-44f0-b61a-bfb37aec65e0
+
+
 
 AI Kaksha is a modern e-learning platform that combines artificial intelligence with interactive learning experiences. The platform offers personalized learning paths, real-time study chat rooms, and AI-powered assistance to enhance the learning experience.
 
