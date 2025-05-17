@@ -7,7 +7,7 @@ import os
 import sys
 
 # Configure Gemini
-genai.configure(api_key="*******************************")
+genai.configure(api_key="********************************")
 
 def check_graphviz():
     """Check if Graphviz is installed and accessible"""
