@@ -22,7 +22,7 @@ IMAGEMAGICK_BINARY = "C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\magick.exe"
 change_settings({"IMAGEMAGICK_BINARY": IMAGEMAGICK_BINARY})
 
 # Configure API key from environment variable
-genai.configure(api_key=os.getenv('GEMINI_API_KEY', 'AIzaSyCjclFHDuq9431tqbtBTwG-COuR7HklbW0'))
+genai.configure(api_key=os.getenv('GEMINI_API_KEY', '************************'))
 
 def check_imagemagick():
     """Check if ImageMagick is properly configured"""
